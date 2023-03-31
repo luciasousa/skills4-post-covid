@@ -10,6 +10,7 @@ import requests
 import json
 import textract
 
+"""
 url = "http://localhost:8080/resource/taxonomy?uri=http://data.europa.eu/esco/concept-scheme/isco&language=pt"
 url = "http://localhost:8080/search?text=manager&language=pt&type=occupation&type=skill&type=concept&facet=type&facet=isInScheme&limit=2&offset=2&full=true"
 
@@ -20,6 +21,7 @@ if response.status_code == 200:
     print(data)
 else:
     print("Error fetching data from API")
+"""
 
 file_name = "../fichas_UCs_MEET/Uc_DEGEIT/DPUC_47121_2017-2018_v1_pt.pdf"
 
@@ -31,8 +33,19 @@ print(text)
 tokens = nltk.sent_tokenize(text)
 
 # search text for keywords in esco taxonomy and return the results
-url = "http://localhost:8080/search?text="+ str(tokens[15]) +"&language=pt&type=occupation&type=skill&type=concept&facet=type&facet=isInScheme&limit=2&offset=2&full=true"
-print("WORD: ",tokens[15])
+url = "http://localhost:8080/search?text="+ "enfermagem" +"&language=pt&type=occupation&type=skill&type=concept&facet=type&facet=isInScheme&full=true"
+
+response = requests.get(url)
+
+if response.status_code == 200:
+    data = response.json()
+    print(data['_embedded']['results'][0] ['_links' ]['self' ]['href'])
+else:
+    print("Error fetching data from API")
+
+# search text for keywords in esco taxonomy and return the results
+url = "http://localhost:8080/search?text="+ "enfermagem" +"&language=pt&type=occupation&type=skill&type=concept&facet=type&facet=isInScheme&full=true"
+
 response = requests.get(url)
 
 if response.status_code == 200:
@@ -40,4 +53,3 @@ if response.status_code == 200:
     print(data)
 else:
     print("Error fetching data from API")
-
