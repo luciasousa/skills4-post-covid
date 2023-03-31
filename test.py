@@ -42,15 +42,15 @@ params = {
 
 # Send the request to the ESCO API
 for i in lemmas:
+    print("Lemma: " + i)
     response = requests.get(ESCO_API_ENDPOINT + "?text=" + i + "&language=pt&type=occupation&type=skill&type=concept&facet=type&facet=isInScheme&full=true")
 
-# Check if the request was successful
-if response.status_code != 200:
-    print("Error fetching data from API")
-else:
-    # Extract the data from the response
-    data = response.json()
-
-    # Print the matches and their positions in the text
-    for match in data["_embedded"]["results"]:
-        print(f"{match['preferredLabel']} found at positions: {match['matches']}")
+    # Check if the request was successful
+    if response.status_code != 200:
+        print("Error fetching data from API")
+    else:
+        # Extract the data from the response
+        data = response.json()
+        # Print the matches and their positions in the text
+        for match in data["_embedded"]["results"]:
+            print("ESCO: ",f"{match['preferredLabel']['pt']}")
