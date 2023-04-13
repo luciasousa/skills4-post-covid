@@ -10,12 +10,12 @@ import textract
 
 # Define the ESCO API endpoint and language
 ESCO_API_ENDPOINT = "http://localhost:8080/search"
-ESCO_API_LANG = "pt"
+ESCO_API_LANG = "en"
 
 file_name = "../fichas_UCs_MEET/Uc_DEGEIT/DPUC_47121_2017-2018_v1_pt.pdf"
 
 # Load the Portuguese spaCy model
-nlp = spacy.load("pt_core_news_sm")
+nlp = spacy.load("en_core_web_sm")
 
 # Read the text file and convert to a string
 text = textract.process(file_name, method='pdfminer').decode('utf-8')
@@ -40,11 +40,25 @@ params = {
     "full": "true"  # Return the full concept details
 }
 
+skills = []
+start = 0
+stop = 0
+
 # Send the request to the ESCO API
 for i in lemmas:
-    print("Lemma: " + i)
-    response = requests.get(ESCO_API_ENDPOINT + "?text=" + i + "&language=pt&type=occupation&type=skill&type=concept&facet=type&facet=isInScheme&full=true")
+    if i == "classificação":
+        stop = 1
+        break
+    
+    if i == "aprendizagem":
+        start = 1
+    
+    if start == 1:
+        skills.append(i)
 
+for i in skills:
+
+    response = requests.get(ESCO_API_ENDPOINT + "?text=" + i + "&language=" + ESCO_API_LANG + "&type=occupation&type=skill&type=concept&facet=type&facet=isInScheme&full=true")
     # Check if the request was successful
     if response.status_code != 200:
         print("Error fetching data from API")
@@ -52,5 +66,6 @@ for i in lemmas:
         # Extract the data from the response
         data = response.json()
         # Print the matches and their positions in the text
+        print("Lemma: " + i)
         for match in data["_embedded"]["results"]:
             print("ESCO: ",f"{match['preferredLabel']['pt']}")
