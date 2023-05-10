@@ -92,8 +92,8 @@ for file in files:
                 #print("ESCO: ",f"{match['preferredLabel']['en']}")
 
     #wait to press a key
-    #input("Press Enter to continue...")
-    #time.sleep(1)
+    input("Press Enter to continue...")
+    time.sleep(1)
             
 print("Skills for EET: ", skills)
 
